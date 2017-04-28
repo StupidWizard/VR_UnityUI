@@ -1,4 +1,6 @@
-﻿namespace VRTK
+﻿using UnityEngine;
+
+namespace VRTK
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -23,17 +25,22 @@
             vrInputModules.Remove(vrInputModule);
         }
 
+		float timeEnable = 0;
         protected override void OnEnable()
         {
+//			Debug.LogError("OnEnable");
+			timeEnable = Time.time;
             EventSystem currentEventSystem = current;
             if (currentEventSystem == null)
             {
+//				Debug.LogError("Current = " + current);
                 return;
             }
 
             currentEventSystem.enabled = false;
 
             CopyValuesFrom(currentEventSystem, this);
+//			Debug.LogError("Destroy current event system " + (currentEventSystem is VRTK_EventSystem));
             Destroy(currentEventSystem);
 
             var vrInputModule = gameObject.AddComponent<VRTK_VRInputModule>();
@@ -43,12 +50,15 @@
             SetEventSystemOfBaseInputModulesTo(this);
             UpdateModules();
 
-            base.OnEnable();
+			base.OnEnable();
         }
 
         protected override void OnDisable()
         {
             base.OnDisable();
+			if (Time.time <= timeEnable) {
+				return;
+			}
 
             var vrInputModule = GetComponent<VRTK_VRInputModule>();
             if (vrInputModule)

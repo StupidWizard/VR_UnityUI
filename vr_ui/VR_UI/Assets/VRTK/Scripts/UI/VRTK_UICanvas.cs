@@ -26,14 +26,26 @@ namespace VRTK
         private const string CANVAS_DRAGGABLE_PANEL = "VRTK_UICANVAS_DRAGGABLE_PANEL";
         private const string ACTIVATOR_FRONT_TRIGGER_GAMEOBJECT = "VRTK_UICANVAS_ACTIVATOR_FRONT_TRIGGER";
 
+		float timeEnable = 0;
         protected virtual void OnEnable()
         {
-            SetupCanvas();
+			timeEnable = Time.time;
+			StartCoroutine(ISetupCanvas());
         }
+
+		System.Collections.IEnumerator ISetupCanvas() {
+			yield return null;
+			SetupCanvas();
+		}
 
         protected virtual void OnDisable()
         {
-            RemoveCanvas();
+//			Debug.LogError("OnDisable");
+			if (Time.time > timeEnable) {
+				RemoveCanvas();
+			} else {
+//				Debug.LogError("Bug Disable on frame of Enable");
+			}
         }
 
         protected virtual void OnDestroy()

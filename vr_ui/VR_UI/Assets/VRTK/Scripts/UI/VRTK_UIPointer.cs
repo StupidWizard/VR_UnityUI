@@ -1,4 +1,7 @@
 ﻿// UI Pointer|UI|80020
+using VRTKSub;
+
+
 namespace VRTK
 {
     using UnityEngine;
@@ -229,6 +232,7 @@ namespace VRTK
 
             if (!(eventSystem is VRTK_EventSystem))
             {
+//				Debug.LogError("Add event system");
                 eventSystem = eventSystem.gameObject.AddComponent<VRTK_EventSystem>();
             }
 
@@ -240,6 +244,8 @@ namespace VRTK
         /// </summary>
         public virtual void RemoveEventSystem()
         {
+			Debug.LogError("RemoveEventSystem");
+			return;
             var vrtkEventSystem = FindObjectOfType<VRTK_EventSystem>();
 
             if (!vrtkEventSystem)
@@ -331,12 +337,17 @@ namespace VRTK
             {
                 controller = GetComponent<VRTK_ControllerEvents>();
             }
-            ConfigureEventSystem();
-            pointerClicked = false;
-            lastPointerPressState = false;
-            lastPointerClickState = false;
-            beamEnabledState = false;
+			StartCoroutine(IConfigureEventSystem());
         }
+
+		IEnumerator IConfigureEventSystem() {
+			yield return null;
+			ConfigureEventSystem();
+			pointerClicked = false;
+			lastPointerPressState = false;
+			lastPointerClickState = false;
+			beamEnabledState = false;
+		}
 
         protected virtual void OnDisable()
         {

@@ -21,21 +21,12 @@ namespace VRTKSub {
 //		}
 
 		// Update is called once per frame
-		void Update () {
-			if (Input.GetKeyDown(KeyCode.T)) {
-				if (IsButtonPressed(ButtonAlias.TouchPad)) {
-					Release(ButtonAlias.TouchPad);
-				} else {
-					Press(ButtonAlias.TouchPad);
-				}
-			}
-			if (Input.GetKeyDown(KeyCode.P)) {
-				StartCoroutine(ClickTrigger());
-			}
-		}
+//		void Update () {
+//			
+//		}
 
 
-		IEnumerator ClickTrigger () {
+		public IEnumerator ClickTrigger () {
 			Press(ButtonAlias.Trigger);
 			yield return null;
 			yield return new WaitForSeconds(0.2f);
@@ -48,15 +39,15 @@ namespace VRTKSub {
 			return buttonPressed[(int)button];
 		}
 
-		public Vector2 GetTouchpadAxis() {
+		public virtual Vector2 GetTouchpadAxis() {
 			return Vector2.zero;
 		}
 
-		void Press(ButtonAlias button) {
+		public virtual void Press(ButtonAlias button) {
 			buttonPressed[(int)button] = true;
 		}
 
-		void Release(ButtonAlias button) {
+		public virtual void Release(ButtonAlias button) {
 			buttonPressed[(int)button] = false;
 		}
 	}

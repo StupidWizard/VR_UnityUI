@@ -67,14 +67,14 @@ namespace VRTK
         [Header("Activation Settings")]
 
         [Tooltip("The button used to activate/deactivate the UI raycast for the pointer.")]
-        public VRTK_ControllerEvents.ButtonAlias activationButton = VRTK_ControllerEvents.ButtonAlias.Touchpad_Press;
+		public VRTK_ControllerEvents.ButtonAlias activationButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
         [Tooltip("Determines when the UI pointer should be active.")]
         public ActivationMethods activationMode = ActivationMethods.HoldButton;
 
         [Header("Selection Settings")]
 
         [Tooltip("The button used to execute the select action at the pointer's target position.")]
-        public VRTK_ControllerEvents.ButtonAlias selectionButton = VRTK_ControllerEvents.ButtonAlias.Trigger_Press;
+		public VRTK_ControllerEvents.ButtonAlias selectionButton = VRTK_ControllerEvents.ButtonAlias.Undefined;
         [Tooltip("Determines when the UI Click event action should happen.")]
         public ClickMethods clickMethod = ClickMethods.ClickOnButtonUp;
         [Tooltip("Determines whether the UI click action should be triggered when the pointer is deactivated. If the pointer is hovering over a clickable element then it will invoke the click action on that element. Note: Only works with `Click Method =  Click_On_Button_Up`")]
@@ -86,15 +86,12 @@ namespace VRTK
 
         [Tooltip("The controller that will be used to toggle the pointer. If the script is being applied onto a controller then this parameter can be left blank as it will be auto populated by the controller the script is on at runtime.")]
         public VRTK_ControllerEvents controller;
-        [Tooltip("A custom transform to use as the origin of the pointer. If no pointer origin transform is provided then the transform the script is attached to is used.")]
-        public Transform pointerOriginTransform = null;
 
         [HideInInspector]
         public PointerEventData pointerEventData;
         [HideInInspector]
         public GameObject hoveringElement;
-        [HideInInspector]
-        public GameObject controllerRenderModel;
+        
         [HideInInspector]
         public float hoverDurationTimer = 0f;
         [HideInInspector]
@@ -315,7 +312,7 @@ namespace VRTK
         /// <returns>A Vector3 of the pointer transform position</returns>
         public virtual Vector3 GetOriginPosition()
         {
-            return (pointerOriginTransform ? pointerOriginTransform.position : transform.position);
+			return transform.position;
         }
 
         /// <summary>
@@ -324,12 +321,11 @@ namespace VRTK
         /// <returns>A Vector3 of the pointer transform forward</returns>
         public virtual Vector3 GetOriginForward()
         {
-            return (pointerOriginTransform ? pointerOriginTransform.forward : transform.forward);
+			return transform.forward;
         }
 
         protected virtual void OnEnable()
         {
-            pointerOriginTransform = (pointerOriginTransform == null ? VRTK_SDK_Bridge.GenerateControllerPointerOrigin(gameObject) : pointerOriginTransform);
 
             if (controller == null)
             {
@@ -340,7 +336,6 @@ namespace VRTK
             lastPointerPressState = false;
             lastPointerClickState = false;
             beamEnabledState = false;
-            controllerRenderModel = VRTK_SDK_Bridge.GetControllerRenderModel(controller.gameObject);
         }
 
         protected virtual void OnDisable()
@@ -387,12 +382,9 @@ namespace VRTK
 
         private IEnumerator WaitForPointerId()
         {
-            var index = (int)VRTK_SDK_Bridge.GetControllerIndex(controller.gameObject);
-            while (index < 0 || index == int.MaxValue)
-            {
-                index = (int)VRTK_SDK_Bridge.GetControllerIndex(controller.gameObject);
-                yield return null;
-            }
+			// TODO - index of UIPointer
+			yield return null;
+			int index = 1;
             pointerEventData.pointerId = index;
         }
     }

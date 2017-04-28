@@ -324,10 +324,6 @@
                 }
             }
 
-            if (pointer.controllerRenderModel)
-            {
-                VRTK_SDK_Bridge.SetControllerRenderModelWheel(pointer.controllerRenderModel, scrollWheelVisible);
-            }
         }
     }
 }

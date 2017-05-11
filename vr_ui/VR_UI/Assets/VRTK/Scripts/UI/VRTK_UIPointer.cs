@@ -1,5 +1,6 @@
 ﻿// UI Pointer|UI|80020
 using VRTKSub;
+using System;
 
 
 namespace VRTK
@@ -140,6 +141,32 @@ namespace VRTK
 
         private EventSystem cachedEventSystem;
         private VRTK_VRInputModule cachedVRInputModule;
+
+
+		public Action<bool> OnPointerActive;
+		public Action<bool> OnPointerSelect;
+
+		void Update() {
+			UpdateEventListener();
+		}
+
+		bool lastActiveBtnPress = false;
+		bool lastSelectBtnPress = false;
+		void UpdateEventListener() {
+			bool curActiveBtnPress = controller.IsButtonPressed(activationButton);
+			if (OnPointerActive != null && (curActiveBtnPress != lastActiveBtnPress)) {
+				OnPointerActive(curActiveBtnPress);
+			}
+			lastActiveBtnPress = curActiveBtnPress;
+
+
+			bool curSelectBtnPress = controller.IsButtonPressed(selectionButton);
+			if (OnPointerSelect != null && (curSelectBtnPress != lastSelectBtnPress)) {
+				OnPointerSelect(curSelectBtnPress);
+			}
+			lastSelectBtnPress = curSelectBtnPress;
+		}
+
 
         public virtual void OnUIPointerElementEnter(UIPointerEventArgs e)
         {
